@@ -39,10 +39,33 @@ def cast_ray_material(orig: np.ndarray, direction: np.ndarray, shapes: ShapesCon
             light_dir: np.ndarray = vector_normalize(light.position() - point)
             scalar_product: float = max(0.0, np.vdot(light_dir, normal))
             light_intensity += light.intensity() * scalar_product
-        return material * light_intensity
+        return material.material() * light_intensity
+    else:
+        return np.array([0, 0, 0])
+
+
+def cast_ray_phong(orig: np.ndarray, direction: np.ndarray, shapes: ShapesContainer,
+                   lights: List[Light]) -> np.ndarray:
+    intersected_any, material, normal, point = shapes.intersect_any(orig, direction)
+    if intersected_any:
+        normal = vector_normalize(normal)
+        light_intensity: float = 0
+        specular_light_intensity: float = 0
+        for light in lights:
+            light_dir: np.ndarray = vector_normalize(light.position() - point)
+            scalar_product: float = max(0.0, np.vdot(light_dir, normal))
+            light_intensity += light.intensity() * scalar_product
+            specular_light_intensity += pow(max(0., np.vdot(reflect(vector_normalize(light_dir), normal), direction)),
+                                            material.specular_exponent()) * light.intensity()
+        return material.material() * light_intensity * material.albedo()[0] + \
+               np.array([255., 255., 255.], dtype=np.float) * specular_light_intensity * material.albedo()[1]
     else:
         return np.array([0, 0, 0])
 
 
 def vector_normalize(vector: np.ndarray) -> np.ndarray:
     return vector / np.linalg.norm(vector)
+
+
+def reflect(i: np.ndarray, n: np.ndarray) -> np.ndarray:
+    return i - n * 2. * np.vdot(i, n)

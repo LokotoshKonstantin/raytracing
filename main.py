@@ -1,6 +1,6 @@
 import numpy as np
 import math
-from pyFiles import stage1, stage2, stage3, stage4
+from pyFiles import stage1, stage2, stage3, stage4, stage5
 
 
 def main():
@@ -32,17 +32,26 @@ def main():
     # stage3(scene_width, scene_height, spheres_centers, spheres_radiuses, eye_position, fov_degree,
     #        sphere_color, background_color)
 
-    colors: np.ndarray = np.array([
+    colors = np.array([
         [255, 0, 0],
         [0, 255, 0],
         [0, 0, 255]
     ], dtype=np.uint8)
-    light_sources: np.ndarray = np.array([
+    light_sources = np.array([
         [scene_height / 2, 0, 0, 1],
-        [0, scene_width / 2, 0, 1]
+        [1, 1, 1, 1]
     ], dtype=int)
-    stage4(scene_width, scene_height, spheres_centers, spheres_radiuses, colors, eye_position, fov_degree,
-           light_sources)
+    # stage4(scene_width, scene_height, spheres_centers, spheres_radiuses, colors, eye_position, fov_degree,
+    #        light_sources)
+
+    albedos = np.array([
+        [0.6, 0.3],
+        [0.9, 0.1],
+        [0.5, 0.5]
+    ])
+    spec_exponents = [50., 10., 20.]
+    stage5(scene_width, scene_height, spheres_centers, spheres_radiuses, colors, albedos, spec_exponents, eye_position,
+           fov_degree, light_sources)
 
 
 if __name__ == "__main__":

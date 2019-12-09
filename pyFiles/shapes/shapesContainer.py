@@ -16,9 +16,9 @@ class ShapesContainer:
     def _reinit(self) -> NoReturn:
         self._min_distance: float = float(sys.maxsize - 1)
 
-    def intersect_any(self, orig: np.ndarray, direction: np.ndarray) -> Tuple[bool, np.ndarray, np.ndarray, np.ndarray]:
+    def intersect_any(self, orig: np.ndarray, direction: np.ndarray) -> Tuple[bool, Material, np.ndarray, np.ndarray]:
         self._reinit()
-        material: np.ndarray = np.zeros(shape=(3,), dtype=np.uint8)
+        material: Material = Material(np.zeros([0, 0, 0]), np.array([0, 0]), 0.)
         normal: np.ndarray = np.zeros(shape=(3,), dtype=np.float)
         hit: np.ndarray = np.zeros(shape=(3,), dtype=np.float)
 
