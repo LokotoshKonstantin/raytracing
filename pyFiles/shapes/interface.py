@@ -11,8 +11,8 @@ class IShape:
     def intersect(self, orig: np.ndarray, direction: np.ndarray) -> Tuple[bool, float]:
         raise NotImplementedError("IShape.intersect() not implemented")
 
-    def material(self) -> np.ndarray:
-        return self._material.material()
+    def material(self) -> Material:
+        return self._material
 
     def center(self) -> np.ndarray:
         return self._c
