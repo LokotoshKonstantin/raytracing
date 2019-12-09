@@ -1,8 +1,9 @@
 import numpy as np
-from typing import NoReturn, Union
+from typing import NoReturn, Union, List
 from pyFiles.shapes.shapesContainer import ShapesContainer
 from pyFiles.shapes.sphere import Sphere
-from pyFiles.render.utils import random_color, cast_ray, vector_normalize, cast_ray_sphere
+from pyFiles.render.utils import random_color, cast_ray, vector_normalize, cast_ray_sphere, cast_ray_material
+from pyFiles.scene.light import Light
 
 
 def gradient_filling(scene: np.ndarray) -> NoReturn:
@@ -93,3 +94,32 @@ def simple_shapes_rendering(scene: np.ndarray, shapes: ShapesContainer, fov_degr
 
             direction: np.ndarray = vector_normalize(np.array([y, x, -1.], dtype=float))
             scene[i, j] = cast_ray(eye_position, direction, shapes, sphere_color, background_color)
+
+
+def shapes_rendering(scene: np.ndarray, shapes: ShapesContainer, fov_degree: float,
+                     lights: List[Light], eye_position: Union[np.ndarray, None] = None) -> NoReturn:
+    """
+
+    :param scene:
+    :param shapes:
+    :param fov_degree:
+    :param lights:
+    :param eye_position:
+    :return:
+    """
+    h: int = scene.shape[0]
+    w: int = scene.shape[1]
+
+    if eye_position is None:
+        eye_position = np.array([0, 0, 0])
+
+    fov: float = np.deg2rad(fov_degree)
+    scale: float = np.tan(fov * 0.5)
+    imageAspectRatio: float = float(w) / float(h)
+    for i in range(0, h):
+        for j in range(0, w):
+            x: float = (2 * (i + 0.5) / float(w) - 1) * scale
+            y: float = (1 - 2 * (j + 0.5) / float(h)) * scale * (1. / imageAspectRatio)
+
+            direction: np.ndarray = vector_normalize(np.array([y, x, -1.], dtype=float))
+            scene[i, j] = cast_ray_material(eye_position, direction, shapes, lights)

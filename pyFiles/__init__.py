@@ -1,16 +1,20 @@
 import numpy as np
 
 from pyFiles.scene.sceneFuncs import create_scene, show_scene
-from pyFiles.render.renderingFuncs import gradient_filling, simple_sphere_rendering, simple_shapes_rendering
+from pyFiles.render.renderingFuncs import (gradient_filling, simple_sphere_rendering, simple_shapes_rendering,
+                                           shapes_rendering)
 from pyFiles.shapes.sphere import Sphere
+from pyFiles.shapes.material import Material
 from pyFiles.shapes.shapesContainer import ShapesContainer
-from typing import NoReturn, Union
+from pyFiles.scene.light import Light
+from typing import NoReturn, Union, List
 
 
 __all__ = [
     "stage1",
     "stage2",
-    "stage3"
+    "stage3",
+    "stage4"
 ]
 
 
@@ -32,7 +36,8 @@ def stage2(scene_width: int, scene_height: int,
                                      height=scene_height)
 
     sphere: Sphere = Sphere(center=sphere_center,
-                            radius=sphere_radius)
+                            radius=sphere_radius,
+                            m=Material(np.array([0, 0, 0])))
 
     simple_sphere_rendering(scene=scene, sphere=sphere,
                             fov_degree=fov_degree, eye_position=eye_position,
@@ -54,7 +59,7 @@ def stage3(scene_width: int, scene_height: int,
 
     shapes: ShapesContainer = ShapesContainer(1000)
     for i in range(0, len(spheres_radiuses)):
-        shapes.append(Sphere(center=spheres_centers[i], radius=spheres_radiuses[i]))
+        shapes.append(Sphere(center=spheres_centers[i], radius=spheres_radiuses[i], m=Material(np.array([0, 0, 0]))))
 
     simple_shapes_rendering(scene=scene, shapes=shapes,
                             fov_degree=fov_degree, eye_position=eye_position,
@@ -64,3 +69,28 @@ def stage3(scene_width: int, scene_height: int,
     show_scene(scene=scene, window_title="Stage 3")
 
     del scene
+
+
+def stage4(scene_width: int, scene_height: int,
+           spheres_centers: np.ndarray, spheres_radiuses: list,
+           colors: np.ndarray,
+           eye_position: np.ndarray,
+           fov_degree: float,
+           light_sources: np.ndarray) -> NoReturn:
+    scene: np.ndarray = create_scene(width=scene_width,
+                                     height=scene_height)
+
+    shapes: ShapesContainer = ShapesContainer(1000)
+    for i in range(0, len(spheres_radiuses)):
+        shapes.append(Sphere(center=spheres_centers[i], radius=spheres_radiuses[i], m=Material(colors[i])))
+
+    lights: List[Light] = []
+    for light_source in light_sources:
+        lights.append(Light(position=light_source[:3], intensity=light_source[3]))
+
+    shapes_rendering(scene=scene, shapes=shapes, fov_degree=fov_degree, eye_position=eye_position, lights=lights)
+
+    show_scene(scene=scene, window_title="Stage 4")
+
+    del scene
+

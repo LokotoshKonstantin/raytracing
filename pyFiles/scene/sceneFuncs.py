@@ -20,6 +20,6 @@ def show_scene(scene: np.ndarray, window_title: str) -> NoReturn:
     :param window_title:
     :return:
     """
-    cv2.imshow(window_title, cv2.cvtColor(scene.astype(np.uint8), cv2.COLOR_RGB2BGR))
+    cv2.imshow(window_title, cv2.cvtColor(np.clip(scene, 0, 255).astype(np.uint8), cv2.COLOR_RGB2BGR))
     cv2.waitKey(0)
 

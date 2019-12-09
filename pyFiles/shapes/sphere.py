@@ -1,11 +1,12 @@
 import numpy as np
 from typing import Tuple
 from pyFiles.shapes.interface import IShape
+from pyFiles.shapes.material import Material
 
 
 class Sphere(IShape):
-    def __init__(self, center: np.ndarray, radius: float):
-        self._c: np.ndarray = center.copy()
+    def __init__(self, center: np.ndarray, radius: float, m: Material):
+        super().__init__(m, center)
         self._r: float = radius
 
     def intersect(self, orig: np.ndarray, direction: np.ndarray) -> Tuple[bool, float]:
