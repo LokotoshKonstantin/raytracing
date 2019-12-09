@@ -2,7 +2,7 @@ import numpy as np
 
 from pyFiles.scene.sceneFuncs import create_scene, show_scene
 from pyFiles.render.renderingFuncs import (gradient_filling, simple_sphere_rendering, simple_shapes_rendering,
-                                           shapes_rendering, shapes_rendering_phong)
+                                           shapes_rendering, shapes_rendering_phong, shapes_rendering_reflection)
 from pyFiles.shapes.sphere import Sphere
 from pyFiles.shapes.material import Material
 from pyFiles.shapes.shapesContainer import ShapesContainer
@@ -15,7 +15,8 @@ __all__ = [
     "stage2",
     "stage3",
     "stage4",
-    "stage5"
+    "stage5",
+    "stage6"
 ]
 
 
@@ -117,7 +118,35 @@ def stage5(scene_width: int, scene_height: int,
 
     shapes_rendering_phong(scene=scene, shapes=shapes, fov_degree=fov_degree, eye_position=eye_position, lights=lights)
 
-    show_scene(scene=scene, window_title="Stage 4")
+    show_scene(scene=scene, window_title="Stage 5")
+
+    del scene
+
+
+def stage6(scene_width: int, scene_height: int,
+           spheres_centers: np.ndarray, spheres_radiuses: list,
+           colors: np.ndarray, albedos: np.ndarray, spec_exponents: List[float],
+           eye_position: np.ndarray,
+           fov_degree: float,
+           light_sources: np.ndarray,
+           depth_limit: int) -> NoReturn:
+    scene: np.ndarray = create_scene(width=scene_width,
+                                     height=scene_height)
+
+    shapes: ShapesContainer = ShapesContainer(1000)
+    for i in range(0, len(spheres_radiuses)):
+        shapes.append(Sphere(center=spheres_centers[i], radius=spheres_radiuses[i], m=Material(colors[i],
+                                                                                               albedos[i],
+                                                                                               spec_exponents[i])))
+
+    lights: List[Light] = []
+    for light_source in light_sources:
+        lights.append(Light(position=light_source[:3], intensity=light_source[3]))
+
+    shapes_rendering_reflection(scene=scene, shapes=shapes, fov_degree=fov_degree, eye_position=eye_position,
+                                lights=lights, depth_limit=depth_limit)
+
+    show_scene(scene=scene, window_title="Stage 6")
 
     del scene
 
