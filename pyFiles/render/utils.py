@@ -1,4 +1,5 @@
 import numpy as np
+from pyFiles.shapes.shapesContainer import ShapesContainer
 from pyFiles.shapes.sphere import Sphere
 from typing import NoReturn
 
@@ -11,9 +12,17 @@ def random_color() -> np.ndarray:
     return np.array([r, g, b], dtype=np.uint8)
 
 
-def cast_ray(orig: np.ndarray, direction: np.ndarray, sphere: Sphere,
+def cast_ray_sphere(orig: np.ndarray, direction: np.ndarray, sphere: Sphere,
              sphere_color: np.ndarray, background_color: np.ndarray) -> np.ndarray:
-    if sphere.ray_intersect(orig, direction)[0]:
+    if sphere.intersect(orig, direction)[0]:
+        return sphere_color
+    else:
+        return background_color
+
+
+def cast_ray(orig: np.ndarray, direction: np.ndarray, shapes: ShapesContainer,
+             sphere_color: np.ndarray, background_color: np.ndarray) -> np.ndarray:
+    if shapes.intersect_any(orig, direction):
         return sphere_color
     else:
         return background_color

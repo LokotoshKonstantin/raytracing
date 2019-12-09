@@ -1,13 +1,14 @@
 import numpy as np
 from typing import Tuple
+from pyFiles.shapes.interface import IShape
 
 
-class Sphere:
+class Sphere(IShape):
     def __init__(self, center: np.ndarray, radius: float):
         self._c: np.ndarray = center.copy()
         self._r: float = radius
 
-    def ray_intersect(self, orig: np.ndarray, direction: np.ndarray) -> Tuple[bool, float]:
+    def intersect(self, orig: np.ndarray, direction: np.ndarray) -> Tuple[bool, float]:
         l: np.ndarray = self._c - orig
         tca: float = np.vdot(l, direction)
         d2: float = np.vdot(l, l) - tca * tca

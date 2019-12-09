@@ -1,6 +1,6 @@
 import numpy as np
 import math
-from pyFiles import stage1, stage2
+from pyFiles import stage1, stage2, stage3
 
 
 def main():
@@ -21,6 +21,15 @@ def main():
     background_color = np.array([255, 255, 255])
 
     stage2(scene_width, scene_height, sphere_center, sphere_radius, eye_position, fov_degree,
+           sphere_color, background_color)
+
+    spheres_centers = np.array([
+        [42, 35, 0],
+        [350, 42, -54],
+        [112, 567, -100],
+    ])
+    spheres_radiuses = [125, 100, 234]
+    stage3(scene_width, scene_height, spheres_centers, spheres_radiuses, eye_position, fov_degree,
            sphere_color, background_color)
 
 
