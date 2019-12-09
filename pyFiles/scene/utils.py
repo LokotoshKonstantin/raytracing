@@ -19,7 +19,7 @@ def show_scene(scene: np.ndarray) -> NoReturn:
     :param scene:
     :return:
     """
-    cv2.imshow("Rendering window", scene)
+    cv2.imshow("Rendering window", cv2.cvtColor(scene.astype(np.uint8), cv2.COLOR_RGB2BGR))
     cv2.waitKey(0)
 
 
