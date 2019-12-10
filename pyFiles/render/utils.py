@@ -1,8 +1,10 @@
+from typing import List
+
 import numpy as np
+
+from pyFiles.scene.light import Light
 from pyFiles.shapes.shapesContainer import ShapesContainer
 from pyFiles.shapes.sphere import Sphere
-from pyFiles.scene.light import Light
-from typing import NoReturn, List
 
 
 def random_color() -> np.ndarray:
@@ -83,6 +85,17 @@ def cast_ray_phong_recur(orig: np.ndarray, direction: np.ndarray, shapes: Shapes
 
         for light in lights:
             light_dir: np.ndarray = vector_normalize(light.position() - point)
+
+            # TODO: Shadow debug
+            # light_distance: float = np.linalg.norm(light.position() - point)
+            # shadow_orig: np.ndarray = point + normal * 0.001
+            # if np.vdot(light_dir, normal) < 0:
+            #     shadow_orig = point - normal * 0.001
+            # shadow_intersect, _, shadow_normal, shadow_point = shapes.intersect_any(shadow_orig, light_dir)
+            # shadow_normal = vector_normalize(shadow_normal)
+            # if shadow_intersect and np.linalg.norm(shadow_point - shadow_normal) < light_distance:
+            #     continue
+
             scalar_product: float = max(0.0, np.vdot(light_dir, normal))
             light_intensity += light.intensity() * scalar_product
             specular_light_intensity += pow(max(0., np.vdot(reflect(vector_normalize(light_dir), normal), direction)),
