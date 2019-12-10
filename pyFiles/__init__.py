@@ -133,7 +133,7 @@ def stage6(scene_width: int, scene_height: int,
     scene: np.ndarray = create_scene(width=scene_width,
                                      height=scene_height)
 
-    shapes: ShapesContainer = ShapesContainer(1000)
+    shapes: ShapesContainer = ShapesContainer(10000)
     for i in range(0, len(spheres_radiuses)):
         shapes.append(Sphere(center=spheres_centers[i], radius=spheres_radiuses[i], m=Material(colors[i],
                                                                                                albedos[i],

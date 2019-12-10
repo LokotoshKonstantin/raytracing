@@ -71,6 +71,12 @@ def cast_ray_phong_recur(orig: np.ndarray, direction: np.ndarray, shapes: Shapes
     intersected_any, material, normal, point = shapes.intersect_any(orig, direction)
 
     if intersected_any and depth <= depth_limit:
+        # if point[0] == 0 and point[2] == 0:
+        #     return np.array([255, 0, 0], dtype=np.uint8)
+        # elif point[1] == 0 and point[2] == 0:
+        #     return np.array([0, 255, 0], dtype=np.uint8)
+        # elif point[0] == 0 and point[1] == 0:
+        #     return np.array([0, 0, 255], dtype=np.uint8)
 
         normal = vector_normalize(normal)
         light_intensity: float = 0
@@ -101,9 +107,10 @@ def cast_ray_phong_recur(orig: np.ndarray, direction: np.ndarray, shapes: Shapes
             specular_light_intensity += pow(max(0., np.vdot(reflect(vector_normalize(light_dir), normal), direction)),
                                             material.specular_exponent()) * light.intensity()
 
-        return material.material() * light_intensity * material.albedo()[0] + \
-               np.array([255., 255., 255.], dtype=np.float) * specular_light_intensity * material.albedo()[1] + \
-               reflect_color*material.albedo()[2]
+        color1 = material.material() * light_intensity * material.albedo()[0]
+        color2 = np.array([255., 255., 255.], dtype=np.float) * specular_light_intensity * material.albedo()[1]
+        color3 = reflect_color * material.albedo()[2]
+        return np.clip(color1 + color2 + color3, 0, 255).astype(np.uint8)
 
     else:
         return np.array([0, 0, 0])
