@@ -1,8 +1,10 @@
+from typing import List
+
 import numpy as np
+
+from pyFiles.scene.light import Light
 from pyFiles.shapes.shapesContainer import ShapesContainer
 from pyFiles.shapes.sphere import Sphere
-from pyFiles.scene.light import Light
-from typing import NoReturn, List
 
 
 def random_color() -> np.ndarray:
@@ -83,21 +85,35 @@ def cast_ray_phong_recur(orig: np.ndarray, direction: np.ndarray, shapes: Shapes
 
         for light in lights:
             light_dir: np.ndarray = vector_normalize(light.position() - point)
+
+            # TODO: Shadow debug
+            light_distance: float = np.linalg.norm(light.position() - point)
+            shadow_orig: np.ndarray = point + normal * 0.001
+            if np.vdot(light_dir, normal) < 0:
+                shadow_orig = point - normal * 0.001
+            shadow_intersect, _, _, shadow_point = shapes.intersect_any(shadow_orig, light_dir)
+            if shadow_intersect and np.linalg.norm(shadow_point - shadow_orig) < light_distance:
+                continue
+
             scalar_product: float = max(0.0, np.vdot(light_dir, normal))
             light_intensity += light.intensity() * scalar_product
             specular_light_intensity += pow(max(0., np.vdot(reflect(vector_normalize(light_dir), normal), direction)),
                                             material.specular_exponent()) * light.intensity()
 
-        return material.material() * light_intensity * material.albedo()[0] + \
-               np.array([255., 255., 255.], dtype=np.float) * specular_light_intensity * material.albedo()[1] + \
-               reflect_color*material.albedo()[2]
+        color1 = material.material() * light_intensity * material.albedo()[0]
+        color2 = np.array([255., 255., 255.], dtype=np.float) * specular_light_intensity * material.albedo()[1]
+        color3 = reflect_color * material.albedo()[2]
+        return np.clip(color1 + color2 + color3, 0, 255).astype(np.uint8)
 
     else:
         return np.array([0, 0, 0])
 
 
 def vector_normalize(vector: np.ndarray) -> np.ndarray:
-    return vector / np.linalg.norm(vector)
+    norm: float = np.linalg.norm(vector)
+    if norm == 0:
+        norm = 1.
+    return vector / norm
 
 
 def reflect(i: np.ndarray, n: np.ndarray) -> np.ndarray:
