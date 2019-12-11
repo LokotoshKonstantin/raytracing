@@ -13,11 +13,14 @@ class Sphere(IShape):
         l: np.ndarray = self._c - orig
         tca: float = np.vdot(l, direction)
         d2: float = np.vdot(l, l) - tca * tca
+
         if d2 > (self._r * self._r):
             return False, -1.
+        
         thc: float = np.sqrt(self._r * self._r - d2)
         t0: float = tca - thc
         t1: float = tca + thc
+
         if t0 > t1:
             t0, t1 = t1, t0
 

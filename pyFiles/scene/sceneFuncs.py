@@ -10,7 +10,7 @@ def create_scene(width: int, height: int) -> np.ndarray:
     :param height:
     :return:
     """
-    return np.zeros(shape=(height, width, 3), dtype=np.uint8)
+    return np.ones(shape=(height, width, 3)) * 255
 
 
 def show_scene(scene: np.ndarray, window_title: str) -> NoReturn:
