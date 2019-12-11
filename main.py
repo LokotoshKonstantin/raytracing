@@ -37,6 +37,5 @@ if __name__ == "__main__":
     scene_render(shapes=DEFAULT_SCENE[4], materials=DEFAULT_SCENE[5],
                  lights=DEFAULT_SCENE[6], eye_position=DEFAULT_SCENE[2],
                  scene_width=DEFAULT_SCENE[0], scene_height=DEFAULT_SCENE[1],
-                 fov_degree=DEFAULT_SCENE[3], depth_limit=DEFAULT_SCENE[7],
-                 withReflection=WITH_REFLECTION, withFlare=WITH_FLARE)
+                 fov_degree=DEFAULT_SCENE[3], depth_limit=DEFAULT_SCENE[7],)
     print(f"Elapsed time: {round(time.time() - start_time, ndigits=4):>4}")
