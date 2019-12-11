@@ -1,68 +1,39 @@
+from render import scene_render
+import numpy as np
 import math
 
-import numpy as np
 
-from pyFiles import stage6
-
-
-def main():
-    scene_width = 1024
-    scene_height = 768
-
-    # stage1(scene_width, scene_height)
-
+RED_COLOR = np.array([255, 0, 0], dtype=np.uint8)
+GREEN_COLOR = np.array([0, 255, 0], dtype=np.uint8)
+BLUE_COLOR = np.array([0, 0, 255], dtype=np.uint8)
+FIRST_LIGHT_SOURCE = np.array([250, -100, 0, 1.7], dtype=float)
+SECOND_LIGHT_SOURCE = np.array([0, 600, 150, 1.5], dtype=float)
+DEFAULT_SCENE = [
+    1024,  # scene width
+    768,  # scene height
     # x, y, z
-    sphere_center = np.array([42, 35, 0])
-    sphere_radius = 125
-
-    eye_position = np.array([300, 250, 1000])
-    fov_degree = np.rad2deg(math.pi / 2.)
-
-    sphere_color = np.array([255, 0, 0])
-    background_color = np.array([255, 255, 255])
-
-    # stage2(scene_width, scene_height, sphere_center, sphere_radius, eye_position, fov_degree,
-    #        sphere_color, background_color)
-
-    spheres_centers = np.array([
-        [700, -250, 50],
-        [125, -340, 0],
-        [650, 500, -50],
-    ])
-    spheres_radiuses = [50, 50, 150]  # , 50, 150]
-    # spheres_radiuses = []
-    # stage3(scene_width, scene_height, spheres_centers, spheres_radiuses, eye_position, fov_degree,
-    #        sphere_color, background_color)
-
-    colors = np.array([
-        [255, 0, 0],
-        [0, 255, 0],
-        [0, 0, 255]
-    ], dtype=np.uint8)
-    light_sources = np.array([
-        [250, -100, 0, 1.7],
-        [0, 600, 150, 1.5]
-    ], dtype=int)
-    # stage4(scene_width, scene_height, spheres_centers, spheres_radiuses, colors, eye_position, fov_degree,
-    #        light_sources)
-
-    albedos = np.array([
-        [0.6, 0.4, 0.0],
-        [0.9, 0.1, 0.0],
-        [0.3, 0.3, 0.9]
-    ])
-    spec_exponents = [50., 50., 2000]  # , 10., 2000.]
-    # spec_exponents = []
-    # stage5(scene_width, scene_height, spheres_centers, spheres_radiuses, colors, albedos, spec_exponents, eye_position,
-    #        fov_degree, light_sources)
-
-    depth_limit = 3
-
-    stage6(scene_width, scene_height, spheres_centers, spheres_radiuses, colors, albedos, spec_exponents, eye_position,
-           fov_degree, light_sources, depth_limit)
-    # stage6(scene_width, scene_height, [], [], [], [], [], eye_position,
-    #        fov_degree, light_sources, depth_limit)
+    np.array([300, 250, 1000], dtype=float),  # eye position
+    np.rad2deg(math.pi / 2.),  # fov in degrees
+    np.array([[700, -250, 50, 50],
+              [125, -340, 0, 50],
+              [650, 500, -50, 150],
+              ], dtype=float),  # spheres centers coords and radiuses
+    [[RED_COLOR, 0.6, 0.4, 0.0, 50.],
+     [GREEN_COLOR, 0.9, 0.1, 0.0, 50.],
+     [BLUE_COLOR, 0.3, 0.3, 0.9, 2000.],
+     ],  # materials conf
+    #  count of spheres and materials must be equal
+    [FIRST_LIGHT_SOURCE,
+     SECOND_LIGHT_SOURCE],  # lights sources
+    3  # depth limit for reflection processing
+]
+WITH_REFLECTION = True
+WITH_FLARE = True
 
 
 if __name__ == "__main__":
-    main()
+    scene_render(shapes=DEFAULT_SCENE[4], materials=DEFAULT_SCENE[5],
+                 lights=DEFAULT_SCENE[6], eye_position=DEFAULT_SCENE[2],
+                 scene_width=DEFAULT_SCENE[0], scene_height=DEFAULT_SCENE[1],
+                 fov_degree=DEFAULT_SCENE[3], depth_limit=DEFAULT_SCENE[7],
+                 withReflection=WITH_REFLECTION, withFlare=WITH_FLARE)
