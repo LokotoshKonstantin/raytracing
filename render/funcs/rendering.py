@@ -24,16 +24,19 @@ def raytracer(orig: np.ndarray, direction: np.ndarray, shapes: np.ndarray,
         light_intensity: float = 0
         specular_light_intensity: float = 0
 
-        dir_normalizated = direction / np.linalg.norm(direction)
-        reflect_dir: np.ndarray = dir_normalizated - normal * 2. * np.vdot(dir_normalizated, normal)
+        # dir_normalizated = direction / np.linalg.norm(direction)
+        reflect_dir: np.ndarray = direction - normal * 2. * np.vdot(direction, normal)
         reflect_orig: np.ndarray = point + normal * 0.001
         if np.vdot(reflect_dir, normal) < 0:
             reflect_orig = point - normal * 0.001
-        reflect_color: np.ndarray = raytracer(reflect_orig, reflect_dir, shapes, materials, lights, depth + 1)
+        if material[3] > 0.1:
+            reflect_color: np.ndarray = raytracer(reflect_orig, reflect_dir, shapes, materials, lights, depth + 1)
+        else:
+            reflect_color: np.ndarray = BACKGROUND_COLOR
 
         for light in lights:
 
-            light_dir: np.ndarray = light[0] - point
+            light_dir: np.ndarray = light[:3] - point
             light_distance: float = np.linalg.norm(light_dir)
             light_dir: np.ndarray = light_dir / light_distance
 
@@ -45,10 +48,10 @@ def raytracer(orig: np.ndarray, direction: np.ndarray, shapes: np.ndarray,
                 continue
 
             scalar_product: float = np.vdot(light_dir, normal)
-            light_intensity += light[1] * max(0.0, scalar_product)
+            light_intensity += light[3] * max(0.0, scalar_product)
             power: float = light_dir - normal * 2. * scalar_product
             power = max(0., np.vdot(power, direction))
-            specular_light_intensity += pow(power, material[4]) * light[1]
+            specular_light_intensity += pow(power, material[4]) * light[3]
 
         color1 = material[0] * light_intensity * material[1]
         color2 = np.array([255., 255., 255.], dtype=np.float) * specular_light_intensity * material[2] * FLARE_MULT

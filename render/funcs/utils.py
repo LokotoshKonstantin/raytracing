@@ -26,10 +26,10 @@ NORMALS = [
 VIEW_DISTANCE_BORDER = 10000
 
 
-@numba.jit
+@numba.jit(nopython=True)
 def intersect_any(orig: np.ndarray, direction: np.ndarray, spheres: np.ndarray, materials: list):
 
-    distances: np.ndarray = np.zeros(shape=spheres.shape[0], dtype=float)
+    distances: np.ndarray = np.zeros(shape=spheres.shape[0])
     for i in range(spheres.shape[0]):
         l = spheres[i, :3] - orig
         tca = np.vdot(l, direction)
@@ -60,7 +60,7 @@ def intersect_any(orig: np.ndarray, direction: np.ndarray, spheres: np.ndarray, 
     material: np.ndarray = materials[closest_shape_ind]
 
     for ind, shift_info in enumerate(SHIFTS):
-        d: float = -1. * (orig[shift_info[0]] - shift_info[1]) / distances[shift_info[0]]
+        d: float = -1. * (orig[shift_info[1]] - shift_info[0]) / direction[shift_info[1]]
         point: np.ndarray = orig + direction * d
         if shift_info[2][1][0] < point[shift_info[2][0]] < shift_info[2][1][1]:
             if shift_info[3][1][0] < point[shift_info[3][0]] < shift_info[3][1][1]:
