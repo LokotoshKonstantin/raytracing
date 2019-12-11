@@ -1,5 +1,6 @@
 from render.funcs.rendering import rendering_per_pixel, REFLECTION_MULT, FLARE_MULT, DEPTH_LIMIT
 from pyFiles.scene.sceneFuncs import create_scene
+import os
 import numpy as np
 import cv2
 
@@ -38,6 +39,9 @@ def scene_render(
         fov_degree: float, depth_limit,
         withReflection: bool, withFlare: bool
 ):
+    if not os.path.exists("./logs"):
+        os.mkdir("./logs")
+
     if withReflection:
         with_reflection()
     else:
@@ -54,5 +58,5 @@ def scene_render(
 
 
 __all__ = [
-    "scene_render"
+    "scene_render",
 ]

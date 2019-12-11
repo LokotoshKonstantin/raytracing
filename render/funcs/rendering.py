@@ -2,6 +2,7 @@ import numpy as np
 import numba
 from typing import List
 from render.funcs.utils import intersect_any
+from render.funcs.utils import profile
 
 
 DEPTH_LIMIT = 3
@@ -59,6 +60,7 @@ def raytracer(orig: np.ndarray, direction: np.ndarray, shapes: np.ndarray,
         return color1 + color2 + color3
 
 
+@profile
 def rendering_per_pixel(scene: np.ndarray, shapes: np.ndarray, fov_degree: float,
                         materials: list,
                         lights: List[np.ndarray],

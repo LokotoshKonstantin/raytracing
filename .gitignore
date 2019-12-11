@@ -224,3 +224,4 @@ $RECYCLE.BIN/
 
 # End of https://www.gitignore.io/api/data,linux,images,windows,pycharm+all,jupyternotebooks
 /*.ipynb
+/logs/*.prof

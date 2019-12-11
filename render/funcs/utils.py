@@ -1,5 +1,6 @@
 import numpy as np
 import numba
+import cProfile
 import sys
 
 
@@ -26,7 +27,7 @@ NORMALS = [
 VIEW_DISTANCE_BORDER = 10000
 
 
-@numba.jit(nopython=True)
+# @numba.jit(nopython=True)
 def intersect_any(orig: np.ndarray, direction: np.ndarray, spheres: np.ndarray, materials: list):
 
     distances: np.ndarray = np.zeros(shape=spheres.shape[0])
@@ -67,3 +68,13 @@ def intersect_any(orig: np.ndarray, direction: np.ndarray, spheres: np.ndarray, 
                 if 0 < d < min_distance:
                     return d <= VIEW_DISTANCE_BORDER, MATERIALS[ind], NORMALS[ind], point
     return min_distance <= VIEW_DISTANCE_BORDER, material, normal, hit
+
+
+def profile(func):
+    def wrapper(*args, **kwargs):
+        profile_filename = "logs/" + func.__name__ + ".prof"
+        profiler = cProfile.Profile()
+        result = profiler.runcall(func, *args, **kwargs)
+        profiler.dump_stats(profile_filename)
+        return result
+    return wrapper
