@@ -8,4 +8,4 @@ def log2text(log_file: str):
 
 
 if __name__ == "__main__":
-    log = log2text("./rendering_per_pixel.prof")
+    log = log2text("rendering_per_pixel.prof")

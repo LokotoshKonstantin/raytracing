@@ -36,11 +36,14 @@ def scene_render(
         lights: list,
         eye_position: np.ndarray,
         scene_width: int, scene_height: int,
-        fov_degree: float, depth_limit,
+        fov_degree: float, output_image_name: str,
         withReflection: bool, withFlare: bool
 ):
-    if not os.path.exists("./logs"):
-        os.mkdir("./logs")
+    if not os.path.exists("logs"):
+        os.mkdir("logs")
+
+    if not os.path.exists("output"):
+        os.mkdir("output")
 
     if withReflection:
         with_reflection()
@@ -53,7 +56,9 @@ def scene_render(
         without_flare()
     scene: np.ndarray = create_scene(scene_width, scene_height)
     scene = rendering_per_pixel(scene, shapes, fov_degree, materials, lights, eye_position)
-    cv2.imshow("Scene render", cv2.cvtColor(scene.astype(np.uint8), cv2.COLOR_RGB2BGR))
+    scene = cv2.cvtColor(scene.astype(np.uint8), cv2.COLOR_RGB2BGR)
+    cv2.imshow("Scene render", scene)
+    cv2.imwrite(os.path.join("output", output_image_name), scene)
     cv2.waitKey(0)
 
 

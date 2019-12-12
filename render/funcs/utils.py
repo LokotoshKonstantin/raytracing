@@ -1,5 +1,5 @@
 import numpy as np
-import numba
+import os
 import cProfile
 import sys
 
@@ -13,8 +13,8 @@ SHIFTS = [(-550, 0, Y_RANGE, Z_RANGE), (800, 0, Y_RANGE, Z_RANGE),
 MATERIALS = [
     [np.array([15, 76, 129]), 0.9, 0.1, 0., 10.],
     [np.array([252, 102, 112]), 0.9, 0.1, 0., 10.],
-    [np.array([3, 153, 141]), 0.9, 0.1, 0.1, 0., 10.],
-    [np.array([102, 2, 60]), 0.9, 0.1, 0., 10.],
+    [np.array([3, 153, 141]), 0.9, 0.1, 0., 10.],
+    [np.array([102, 2, 60]), 0.4, 0.4, 0.9, 2000.],
     [np.array([223, 230, 234]), 0.4, 0.4, 0.9, 2000.]
 ]
 NORMALS = [
@@ -72,7 +72,7 @@ def intersect_any(orig: np.ndarray, direction: np.ndarray, spheres: np.ndarray, 
 
 def profile(func):
     def wrapper(*args, **kwargs):
-        profile_filename = "logs/" + func.__name__ + ".prof"
+        profile_filename = os.path.join("logs", func.__name__ + ".prof")
         profiler = cProfile.Profile()
         result = profiler.runcall(func, *args, **kwargs)
         profiler.dump_stats(profile_filename)
