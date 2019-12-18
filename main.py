@@ -1,13 +1,14 @@
-from render import scene_render
-import numpy as np
 import math
 import time
 
+import numpy as np
+
+from render import scene_render
 
 RED_COLOR = np.array([255, 0, 0], dtype=np.uint8)
 GREEN_COLOR = np.array([0, 255, 0], dtype=np.uint8)
 BLUE_COLOR = np.array([0, 0, 255], dtype=np.uint8)
-FIRST_LIGHT_SOURCE = np.array([250, -100, 0, 0.9], dtype=float)
+FIRST_LIGHT_SOURCE = np.array([250, -100, 0, 0.9], dtype=float)  # Положение и интенсивность
 SECOND_LIGHT_SOURCE = np.array([0, 600, 150, 1], dtype=float)
 DEFAULT_SCENE = [
     1024,  # scene width
@@ -19,8 +20,9 @@ DEFAULT_SCENE = [
               [125, -340, 0, 50],
               [650, 500, -50, 150],
               ], dtype=float),  # spheres centers coords and radiuses
-    [[RED_COLOR, 0.6, 0.4, 0.0, 50.],
-     [GREEN_COLOR, 0.9, 0.1, 0.0, 50.],
+    [[RED_COLOR, 0.6, 0.4, 0.0, 50.],  # Материалы - это:
+     [GREEN_COLOR, 0.9, 0.1, 0.0, 50.],  # Цвет - numpy.ndarray[numpy.uint8[3]], коэфицент диффузного цвета,
+     # коэфицент блика, коэфицент отражения и степень засвета (чем выше, тем больше будет пятно засвета).
      [BLUE_COLOR, 0.3, 0.3, 0.9, 2000.],
      ],  # materials conf
     #  count of spheres and materials must be equal

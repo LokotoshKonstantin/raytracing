@@ -1,8 +1,10 @@
-from render.funcs.rendering import rendering_per_pixel, REFLECTION_MULT, FLARE_MULT, DEPTH_LIMIT
-from pyFiles.scene.sceneFuncs import create_scene
 import os
-import numpy as np
+
 import cv2
+import numpy as np
+
+from pyFiles.scene.sceneFuncs import create_scene
+from render.funcs.rendering import rendering_per_pixel, REFLECTION_MULT, FLARE_MULT, DEPTH_LIMIT
 
 
 def with_reflection():
@@ -54,9 +56,9 @@ def scene_render(
         with_flare()
     else:
         without_flare()
-    scene: np.ndarray = create_scene(scene_width, scene_height)
-    scene = rendering_per_pixel(scene, shapes, fov_degree, materials, lights, eye_position)
-    scene = cv2.cvtColor(scene.astype(np.uint8), cv2.COLOR_RGB2BGR)
+    scene: np.ndarray = create_scene(scene_width, scene_height)  # Создание пустой сцены (по-умолчанию черная)
+    scene = rendering_per_pixel(scene, shapes, fov_degree, materials, lights, eye_position)  # Вызов рендеринга
+    scene = cv2.cvtColor(scene.astype(np.uint8), cv2.COLOR_RGB2BGR)  # Подготовка сцены к рендеру
     cv2.imshow("Scene render", scene)
     cv2.imwrite(os.path.join("output", output_image_name), scene)
     cv2.waitKey(0)
