@@ -4,11 +4,11 @@ import sys
 
 import numpy as np
 
-# Описание плоскостей стен
-X_RANGE = [0, (-550, 800)]  # Расположение по X, Y, Z
+# Промежутки стен на плоскостях по X, Y, Z
+X_RANGE = [0, (-550, 800)]
 Y_RANGE = [1, (-390, 650)]
 Z_RANGE = [2, (-250, 1000)]
-# Для задания уравнения плоскости
+# Для описаний уравнений плоскости
 SHIFTS = [(-550, 0, Y_RANGE, Z_RANGE), (800, 0, Y_RANGE, Z_RANGE),
           (650, 1, X_RANGE, Z_RANGE), (-390, 1, X_RANGE, Z_RANGE),
           (-250, 2, X_RANGE, Y_RANGE)]
@@ -32,15 +32,18 @@ NORMALS = [
 VIEW_DISTANCE_BORDER = 10000
 
 
-# @numba.jit(nopython=True)
 def intersect_any(orig: np.ndarray, direction: np.ndarray, spheres: np.ndarray, materials: list):
     """
     Вычисление пересечений с объектами
+    orig - откуда смотрим, точка
+    direction - куда смотрим, вектор
+    shapes - описания сфер
+    materials - описания материалов, кол-во соотносится с кол-вом сфер
     """
     distances: np.ndarray = np.zeros(shape=spheres.shape[0])
     for i in range(spheres.shape[0]):
         # В README на странице репозитория есть ссылка на статью с описанием метода нахождения пересечений.
-        # Там достаточно подробно изложен подход, этот код является адаптацией код оттуда.
+        # Там достаточно подробно изложен подход, этот код является адаптацией кода оттуда.
         l = spheres[i, :3] - orig
         tca = np.vdot(l, direction)
         d2 = np.vdot(l, l) - tca * tca

@@ -16,6 +16,11 @@ def raytracer(orig: np.ndarray, direction: np.ndarray, shapes: np.ndarray,
               lights: List[np.ndarray], depth: int) -> np.ndarray:
     """
     Вычилсение всего светового влияния на пиксель
+    orig - откуда смотрим, точка
+    direction - куда смотрим, вектор
+    shapes - описания сфер
+    materials - описания материалов, кол-во соотносится с кол-вом сфер
+    lights - описания источников света
     """
     if depth > DEPTH_LIMIT:
         # При калькуляции отрвженного света параметр глубины определяет
@@ -43,7 +48,8 @@ def raytracer(orig: np.ndarray, direction: np.ndarray, shapes: np.ndarray,
         reflect_orig: np.ndarray = point + normal * 0.001
         if np.vdot(reflect_dir, normal) < 0:
             reflect_orig = point - normal * 0.001
-        if material[3] > 0.1:  # Небольшой чит:если материал объекта не предполагает отражение, то мы его и не вычисляем
+        if material[
+            3] > 0.1:  # Небольшой чит:если материал объекта не предполагает отражение, то мы не прослеживаем путь луча
             reflect_color: np.ndarray = raytracer(reflect_orig, reflect_dir, shapes, materials, lights, depth + 1)
         else:
             reflect_color: np.ndarray = BACKGROUND_COLOR
